@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flutter-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flutter
+  template:
+    metadata:
+      labels:
+        app: flutter
+    spec:
+      containers:
+        - name: flutter-container
+          image: yosserchb123/flutter-web-app2:latest
+          ports:
+            - containerPort: 80

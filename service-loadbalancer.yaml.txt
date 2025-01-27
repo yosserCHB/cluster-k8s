@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flutter-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flutter
+  template:
+    metadata:
+      labels:
+        app: flutter
+    spec:
+      containers:
+        - name: flutter-container
+          image: yosserchb123/flutter-web-app2:latest
+          ports:
+            - containerPort: 80
+master@master:~$ ^C
+master@master:~$ cat service-loadbalancer.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: flutter-service
+spec:
+  selector:
+    app: flutter
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+  type: NodePort

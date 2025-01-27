@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Step 1: Pull required images for Kubernetes
+echo "Pulling Kubernetes images..."
+sudo kubeadm config images pull
+
+# Step 2: Initialize the Kubernetes control plane
+echo "Initializing Kubernetes control plane..."
+sudo kubeadm init --pod-network-cidr=10.10.0.0/16
+
+# Step 3: Set up local kubeconfig for kubectl command
+echo "Setting up kubeconfig for kubectl..."
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# Step 4: Install Calico network plugin
+echo "Installing Calico network plugin..."
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml
+
+# Step 5: Download and modify Calico custom resources
+echo "Downloading and modifying Calico custom resources..."
+curl -O https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/custom-resources.yaml
+sed -i 's/cidr: 192\\.168\\.0\\.0\/16/cidr: 10.10.0.0\/16/g' custom-resources.yaml
+
+# Step 6: Apply the modified Calico custom resources
+echo "Applying the modified Calico custom resources..."
+kubectl create -f custom-resources.yaml
+
+# Print completion message
+echo "Kubernetes setup is complete!"
