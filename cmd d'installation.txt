@@ -1,0 +1,41 @@
+Sur le nœud Master :
+
+chmod +x script-k8s.sh
+./script-k8s.sh
+
+chmod +x master-rest-conf-k8s.sh
+./master-rest-conf-k8s.sh
+
+kubectl get nodes
+Joindre le Worker au cluster Master  : kubeadm token create --print-join-command
+
+s'il ya un probl
+kubectl delete -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml
+
+***********
+
+Sur la machine Worker
+
+chmod +x script-k8s.sh
+./script-k8s.sh
+ls -l script-k8s.sh
+
+
+sudo kubeadm join 192.168.1.1:6443 --token abcdef.0123456789abcdef --discovery-token-ca-cert-hash sha256:abc123xyz456...
+
+***********
+
+Pour que je puisse acceder au : kubcetl get nodes from worker node
+
+Sur ton worker node:
+mkdir -p ~/.kube
+ls -l ~/.kube/config
+kubectl get nodes
+
+
+Sur le nœud Master :
+kubectl get nodes -o wide
+sudo scp ~/.kube/config triweb-test-worker@IP_WORKER:~/.kube/config
+
+
